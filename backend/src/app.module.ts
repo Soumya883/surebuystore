@@ -9,6 +9,7 @@ import { ProductsModule } from './products/products.module';
 import { CategoriesModule } from './categories/categories.module';
 import { BrandsModule } from './brands/brands.module';
 import { OrdersModule } from './orders/orders.module';
+import { User } from './users/entities/user.entity';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { OrdersModule } from './orders/orders.module';
         },
       },
     }),
+    TypeOrmModule.forFeature([User]),
     UsersModule, 
     AuthModule, 
     SellDeviceModule,
@@ -35,3 +37,4 @@ import { OrdersModule } from './orders/orders.module';
   providers: [AppService],
 })
 export class AppModule {}
+
