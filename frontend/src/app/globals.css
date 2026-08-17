@@ -304,3 +304,33 @@
   border-color: #42c8b7 !important;
   box-shadow: 0 0 0 2px rgba(66, 200, 183, 0.3) !important;
 }
+
+/* ─── Robust Responsive Helpers for Products ─── */
+.products-layout {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+}
+.desktop-sidebar {
+  display: block;
+  width: 260px;
+  flex-shrink: 0;
+}
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .products-layout {
+    flex-direction: column !important;
+  }
+  .desktop-sidebar {
+    display: none !important;
+  }
+  .products-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 12px !important;
+  }
+}

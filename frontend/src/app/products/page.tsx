@@ -151,9 +151,9 @@ export default function ProductsPage() {
         ))}
       </div>
 
-      <div className="max-w-[1280px] mx-auto p-[24px_16px] flex flex-col md:flex-row gap-[24px] items-start w-full">
+      <div className="products-layout max-w-[1280px] mx-auto p-[24px_16px] w-full">
         {/* Desktop Sidebar */}
-        <aside className="hidden md:block w-[260px] shrink-0 products-sidebar">
+        <aside className="desktop-sidebar products-sidebar">
           <Sidebar />
         </aside>
 
@@ -193,7 +193,7 @@ export default function ProductsPage() {
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-[20px]">
+            <div className="products-grid">
               {filteredProducts.map(p => {
                 const condStyle = CONDITION_COLORS[p.condition] || { bg: "#f3f4f6", color: "#6b7280" };
                 const isWishlisted = wishlist.includes(p.id);
