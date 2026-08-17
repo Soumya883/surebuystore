@@ -40,7 +40,7 @@ export function Footer() {
             <Link href="/" className="flex items-center gap-2 no-underline">
               <div className="relative w-[180px] h-[52px] lg:w-[220px] lg:h-[64px]">
                 <Image 
-                  src="https://cdn2.clevup.in/111129/1644850958193_114304_logo.jpg?height=200&format=webp" 
+                  src="/logo.png" 
                   alt="SureBuy Logo" 
                   fill 
                   className="object-contain object-left"

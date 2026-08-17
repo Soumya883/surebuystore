@@ -71,7 +71,7 @@ export function Header() {
           <Link href="/" className="no-underline">
             <div className="relative w-[150px] h-[40px] lg:w-[180px] lg:h-[50px]">
               <Image 
-                src="https://cdn2.clevup.in/111129/1644850958193_114304_logo.jpg?height=200&format=webp" 
+                src="/logo.png" 
                 alt="SureBuy Logo" 
                 fill 
                 className="object-contain object-left"
