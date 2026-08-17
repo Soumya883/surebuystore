@@ -1,10 +1,17 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { ChevronRight, Star, Search, Smartphone, Laptop, Watch, Headphones, Tablet, Tv, Camera, Gamepad2, ShoppingCart, ShieldCheck, Settings, Package } from "lucide-react";
+import { ChevronRight, Star, Search, Smartphone, Laptop, Watch, Headphones, Tablet, Tv, Camera, Gamepad2, ShoppingCart, ShieldCheck, Settings, Package, Flame, Zap, Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 /* ─── DATA ─── */
+const DHAMAKA_OFFERS = [
+  { name: "iPhone 14 Pro Max", price: "₹47,999", mrp: "₹1,09,900", discount: "56% OFF", tag: "MEGA DEAL 🔥", img: "https://cdn2.clevup.in/111129/1676810296715_SKU-0131_0.jpg?width=600&format=webp", badge: "Extra ₹2000 Off" },
+  { name: "Samsung Galaxy S23 Ultra", price: "₹44,999", mrp: "₹1,24,999", discount: "64% OFF", tag: "FLASH SALE ⚡", img: "https://cdn2.clevup.in/111129/1662733475266_SKU-0117_0.jpg?width=600&format=webp", badge: "Free Warranty" },
+  { name: "OnePlus 11 5G 256GB", price: "₹23,999", mrp: "₹56,999", discount: "58% OFF", tag: "HOT PICK 💥", img: "https://cdn2.clevup.in/111129/1662733715347_SKU-0113_0.jpg?width=600&format=webp", badge: "Instant Payout" },
+  { name: "Apple iPhone 13 128GB", price: "₹31,499", mrp: "₹79,900", discount: "60% OFF", tag: "DHAMAKA 🧨", img: "https://cdn2.clevup.in/111129/1663421580279_SKU-0119_0.jpg?width=600&format=webp", badge: "7-Day Return" },
+];
+
 const SELL_CATEGORIES = [
   { name: "Phone",       icon: Smartphone, href: "/sell" },
   { name: "Laptop",      icon: Laptop,     href: "/sell/laptop" },
@@ -253,6 +260,72 @@ export default function Home() {
                 </button>
               </Link>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════
+          BIG DHAMAKA OFFER ZONE (High Conversion Promo)
+         ══════════════════════════════════════════════ */}
+      <section className="px-4 py-6 md:py-10 max-w-7xl mx-auto">
+        <div className="relative rounded-3xl overflow-hidden bg-gradient-to-r from-red-600 via-orange-500 to-amber-500 p-5 md:p-8 shadow-2xl text-white">
+          {/* Decorative background blur flares */}
+          <div className="absolute -right-10 -bottom-10 w-64 h-64 bg-yellow-300/20 rounded-full blur-3xl pointer-events-none"></div>
+          <div className="absolute -left-10 -top-10 w-64 h-64 bg-red-900/30 rounded-full blur-3xl pointer-events-none"></div>
+
+          {/* Header */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 relative z-10">
+            <div>
+              <div className="inline-flex items-center gap-2 bg-yellow-400 text-gray-900 px-3.5 py-1 rounded-full text-xs font-black uppercase tracking-wider shadow-md mb-2">
+                <Flame size={15} className="text-red-600 fill-red-600 animate-bounce" /> Big Dhamaka Offer Zone
+              </div>
+              <h2 className="text-2xl md:text-3xl font-black m-0 text-white tracking-tight leading-tight">
+                Flash Mega Sale — <span className="text-yellow-300">Extra Discounts & Cash Bonuses</span>
+              </h2>
+              <p className="text-white/90 text-xs md:text-sm m-0 mt-1 font-medium">
+                Exclusive limited-time price drops on top certified devices. Grab them before stocks run out!
+              </p>
+            </div>
+
+            <Link href="/products">
+              <button className="bg-gray-900 hover:bg-black text-yellow-400 border border-yellow-400/40 px-5 py-2.5 rounded-xl font-black text-xs md:text-sm cursor-pointer transition-all shadow-lg whitespace-nowrap flex items-center justify-center gap-2 w-max">
+                View All Deals <ChevronRight size={16} />
+              </button>
+            </Link>
+          </div>
+
+          {/* Cards (Grid on desktop, smooth swipe cards on mobile) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 relative z-10">
+            {DHAMAKA_OFFERS.map((item) => (
+              <div key={item.name} className="bg-white rounded-2xl p-4 text-gray-900 shadow-lg flex flex-col justify-between group hover:-translate-y-1 transition-all duration-300 border border-amber-200">
+                <div>
+                  <div className="flex items-center justify-between gap-2 mb-2">
+                    <span className="bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-wider">{item.discount}</span>
+                    <span className="bg-amber-100 text-amber-900 text-[10px] font-extrabold px-2 py-0.5 rounded">{item.tag}</span>
+                  </div>
+
+                  <div className="relative h-[150px] w-full bg-gray-50 rounded-xl flex items-center justify-center p-3 mb-3">
+                    <Image src={item.img} alt={item.name} fill className="object-contain p-2 group-hover:scale-105 transition-transform" sizes="200px" />
+                  </div>
+
+                  <h3 className="text-xs md:text-sm font-bold text-gray-900 m-0 mb-1 line-clamp-1">{item.name}</h3>
+                  <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded inline-block mb-3">{item.badge}</span>
+                </div>
+
+                <div className="pt-3 border-t border-gray-100 flex items-center justify-between">
+                  <div>
+                    <div className="text-[10px] text-gray-400 line-through leading-none">{item.mrp}</div>
+                    <div className="text-base font-black text-red-600 leading-tight">{item.price}</div>
+                  </div>
+                  <button
+                    onClick={() => buyNow(item as any)}
+                    className="bg-red-600 hover:bg-red-700 text-white border-none rounded-lg px-3 py-1.5 text-xs font-black cursor-pointer transition-colors shadow-sm"
+                  >
+                    Grab Deal
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
