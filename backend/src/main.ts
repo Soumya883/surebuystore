@@ -8,7 +8,7 @@ async function bootstrap() {
 
   // Robust CORS for Vercel serverless — allow all origins with explicit headers
   app.enableCors({
-    origin: (origin, callback) => {
+    origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
       // Allow all origins (localhost:3000, surebuystore.vercel.app, etc.)
       callback(null, true);
     },
