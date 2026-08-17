@@ -9,9 +9,9 @@ import { User, UserRole } from './users/entities/user.entity';
 
 const AppDataSource = new DataSource({
   type: 'postgres',
-  url: 'postgresql://neondb_owner:npg_LhPNe5wycK3I@ep-long-voice-ayaczca1-pooler.c-5.us-east-2.aws.neon.tech/neondb?sslmode=require',
+  url: 'postgresql://neondb_owner:npg_LhPNe5wycK3I@ep-long-voice-ayaczca1-pooler.c-5.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require',
   synchronize: true,
-  extra: { ssl: { rejectUnauthorized: false } },
+  ssl: { rejectUnauthorized: false },
   entities: [User],
 });
 

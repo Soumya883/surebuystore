@@ -1,6 +1,8 @@
 "use client";
 import { AdminSidebar, AdminHeader, StatCard } from "@/components/admin/AdminLayout";
 import { Package, ShoppingBag, Users, Recycle, IndianRupee, TrendingUp } from "lucide-react";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 const RECENT_ORDERS = [
   { id: "#ORD-1091", customer: "Rohit Sharma", device: "iPhone 14 Pro", amount: "₹48,000", status: "Completed", date: "16 Aug 2026" },
@@ -31,6 +33,16 @@ const BAR_DATA = [
 ];
 
 export default function AdminDashboard() {
+  const router = useRouter();
+  
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    if (!token || user?.role !== "ADMIN") {
+      router.replace("/auth");
+    }
+  }, [router]);
+
   return (
     <div style={{ display: "flex", minHeight: "100vh", background: "#f1f5f9", fontFamily: "Inter, system-ui, sans-serif" }}>
       <AdminSidebar active="/admin" />
