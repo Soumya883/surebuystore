@@ -8,6 +8,12 @@ interface CartItem { id: string; title: string; price: number; mrp: number; imag
 
 const INDIAN_STATES = ["Andhra Pradesh","Assam","Bihar","Chhattisgarh","Delhi","Goa","Gujarat","Haryana","Himachal Pradesh","Jharkhand","Karnataka","Kerala","Madhya Pradesh","Maharashtra","Manipur","Meghalaya","Mizoram","Nagaland","Odisha","Punjab","Rajasthan","Sikkim","Tamil Nadu","Telangana","Tripura","Uttar Pradesh","Uttarakhand","West Bengal"];
 
+declare global {
+  interface Window {
+    Razorpay: any;
+  }
+}
+
 export default function CheckoutPage() {
   const router = useRouter();
   const [items, setItems] = useState<CartItem[]>([]);
@@ -34,28 +40,89 @@ export default function CheckoutPage() {
 
   const handleAddressSubmit = (e: React.FormEvent) => { e.preventDefault(); setStep(2); };
 
+  const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+      if (typeof window !== "undefined" && window.Razorpay) return resolve(true);
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
+  const submitOrderToBackend = async (razorpayPaymentId?: string, razorpayOrderId?: string) => {
+    const token = localStorage.getItem("access_token");
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+    const res = await fetch(`${API_URL}/orders`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      body: JSON.stringify({
+        items: items.map(i => ({ productId: i.id, quantity: i.quantity })),
+        paymentMethod,
+        shippingAddress: address,
+        advanceAmount: paymentMethod === "COD" ? advancePay : total,
+        remainingAmount: paymentMethod === "COD" ? codRemaining : 0,
+        razorpayPaymentId,
+        razorpayOrderId,
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || "Order failed");
+    setOrderId(data.id);
+    localStorage.removeItem("cart");
+    setStep(3);
+  };
+
   const placeOrder = async () => {
     setLoading(true); setError("");
     try {
-      const token = localStorage.getItem("access_token");
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
-      const res = await fetch(`${API_URL}/orders`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({
-          items: items.map(i => ({ productId: i.id, quantity: i.quantity })),
-          paymentMethod,
-          shippingAddress: address,
-          advanceAmount: paymentMethod === "COD" ? advancePay : total,
-          remainingAmount: paymentMethod === "COD" ? codRemaining : 0,
-        }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Order failed");
-      setOrderId(data.id);
-      localStorage.removeItem("cart");
-      setStep(3);
-    } catch (err: any) { setError(err.message); } finally { setLoading(false); }
+      const payableAmount = paymentMethod === "COD" ? advancePay : total;
+      const sdkLoaded = await loadRazorpayScript();
+
+      if (!sdkLoaded) {
+        // Fallback to direct backend submit if SDK fails to load
+        await submitOrderToBackend();
+        return;
+      }
+
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY || "rzp_test_SureBuyStore",
+        amount: payableAmount * 100, // Amount in paise
+        currency: "INR",
+        name: "SureBuy Store",
+        description: paymentMethod === "COD" ? `10% COD Deposit (₹${advancePay})` : "Full Prepaid Order",
+        image: "/logo.png",
+        handler: async function (response: any) {
+          try {
+            await submitOrderToBackend(response.razorpay_payment_id, response.razorpay_order_id);
+          } catch (err: any) {
+            setError(err.message || "Payment verification failed");
+          } finally {
+            setLoading(false);
+          }
+        },
+        prefill: {
+          name: address.fullName,
+          email: user?.email || "",
+          contact: address.phone,
+        },
+        theme: {
+          color: "#42c8b7",
+        },
+        modal: {
+          ondismiss: function () {
+            setLoading(false);
+          },
+        },
+      };
+
+      const paymentObject = new window.Razorpay(options);
+      paymentObject.open();
+    } catch (err: any) { 
+      setError(err.message); 
+      setLoading(false);
+    }
   };
 
   if (items.length === 0 && step !== 3) return (
@@ -184,18 +251,18 @@ export default function CheckoutPage() {
               {paymentMethod === "COD" && (
                 <div style={{ background:"#e8f9f7", border:"1px solid #42c8b7", borderRadius:10, padding:"18px", margin:"20px 0", fontSize:14, textAlign:"left" }}>
                   <div style={{ fontWeight:700, color:"#165042", marginBottom:6, fontSize:15 }}>💵 COD Order Confirmed Breakdown</div>
-                  <div style={{ display:"flex", justifyBetween:"space-between", marginBottom:4 }}>
+                  <div style={{ display:"flex", justifyContent:"space-between", marginBottom:4 }}>
                     <span>10% Advance Deposit (Paid Now):</span>
                     <strong style={{ color:"#165042" }}>₹{advancePay.toLocaleString()}</strong>
                   </div>
-                  <div style={{ display:"flex", justifyBetween:"space-between", marginTop:4, borderTop:"1px stroke #c8f2ed", paddingTop:6 }}>
+                  <div style={{ display:"flex", justifyContent:"space-between", marginTop:4, borderTop:"1px solid #c8f2ed", paddingTop:6 }}>
                     <span>90% Balance Due on Delivery:</span>
                     <strong style={{ color:"#2e7d32", fontSize:16 }}>₹{codRemaining.toLocaleString()}</strong>
                   </div>
                 </div>
               )}
               <p style={{ color:"#888", fontSize:13, marginBottom:24 }}>We&apos;ll send order updates to {user?.email}</p>
-              <div style={{ display:"flex", gap:12, justifyCenter:"center" }}>
+              <div style={{ display:"flex", gap:12, justifyContent:"center" }}>
                 <Link href="/" style={{ padding:"12px 24px", background:"#42c8b7", color:"#fff", borderRadius:8, textDecoration:"none", fontWeight:600 }}>Continue Shopping</Link>
                 <Link href="/account/orders" style={{ padding:"12px 24px", background:"#f0f0f0", color:"#333", borderRadius:8, textDecoration:"none", fontWeight:600 }}>View My Orders</Link>
               </div>
@@ -225,12 +292,12 @@ export default function CheckoutPage() {
                 <span>₹{total.toLocaleString()}</span>
               </div>
               {paymentMethod === "COD" && (
-                <div style={{ marginTop:14, background:"#f8f9fa", borderRadius:8, padding:"12px", border:"1px border #e2e8f0" }}>
-                  <div style={{ display:"flex", justifyBetween:"space-between", fontSize:13, marginBottom:4, color:"#42c8b7", fontWeight:700 }}>
+                <div style={{ marginTop:14, background:"#f8f9fa", borderRadius:8, padding:"12px", border:"1px solid #e2e8f0" }}>
+                  <div style={{ display:"flex", justifyContent:"space-between", fontSize:13, marginBottom:4, color:"#42c8b7", fontWeight:700 }}>
                     <span>10% Pay Now (Deposit):</span>
                     <span>₹{advancePay.toLocaleString()}</span>
                   </div>
-                  <div style={{ display:"flex", justifyBetween:"space-between", fontSize:13, color:"#2e7d32", fontWeight:700 }}>
+                  <div style={{ display:"flex", justifyContent:"space-between", fontSize:13, color:"#2e7d32", fontWeight:700 }}>
                     <span>90% Pay on Delivery:</span>
                     <span>₹{codRemaining.toLocaleString()}</span>
                   </div>
