@@ -44,41 +44,39 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* ─── Cashify-Inspired Light Theme ─── */
+/* ─── Valuation Slip Premium Theme ─── */
 :root {
-  /* Cashify teal: #42c8b7  |  text: #0f0f0f  |  secondary-text: #707070 */
-  --background:        oklch(1 0 0);           /* #ffffff */
-  --foreground:        oklch(0.1 0 0);          /* #0f0f0f */
-  --card:              oklch(1 0 0);
-  --card-foreground:   oklch(0.1 0 0);
+  /* Premium Colors */
+  --background:        oklch(0.97 0.01 90);      /* #F7F5F1 Warm Paper */
+  --foreground:        oklch(0.3 0 0);           /* #3E4147 Warm Charcoal */
+  --card:              oklch(1 0 0);             /* #FFFFFF */
+  --card-foreground:   oklch(0.3 0 0);           /* #3E4147 */
   --popover:           oklch(1 0 0);
-  --popover-foreground:oklch(0.1 0 0);
-  --primary:           oklch(0.745 0.12 186);   /* #42c8b7  teal */
+  --popover-foreground:oklch(0.3 0 0);
+  --primary:           oklch(0.48 0.09 165);     /* #1F6F5C Muted Emerald */
   --primary-foreground:oklch(1 0 0);
-  --secondary:         oklch(0.97 0 0);         /* #f7f7f7 */
-  --secondary-foreground:oklch(0.1 0 0);
-  --muted:             oklch(0.96 0 0);
-  --muted-foreground:  oklch(0.45 0 0);         /* #707070 */
-  --accent:            oklch(0.745 0.12 186);   /* teal accent */
+  --secondary:         oklch(0.18 0.02 260);     /* #0B1220 Deep Ink Navy */
+  --secondary-foreground:oklch(1 0 0);
+  --muted:             oklch(0.93 0.01 90);      /* slightly darker paper */
+  --muted-foreground:  oklch(0.5 0 0);           
+  --accent:            oklch(0.68 0.12 75);      /* #B8935F Brass/Gold */
   --accent-foreground: oklch(1 0 0);
   --destructive:       oklch(0.577 0.245 27);
-  --border:            oklch(0.92 0 0);         /* #e5e7eb */
-  --input:             oklch(0.92 0 0);
-  --ring:              oklch(0.745 0.12 186);   /* teal ring */
-  --radius: 0.5rem;
+  --border:            oklch(0.88 0.01 90);      /* warm subtle border */
+  --input:             oklch(0.88 0.01 90);
+  --ring:              oklch(0.48 0.09 165);     /* emerald ring */
+  --radius: 0.25rem; /* sharper, more paper-like corners */
 
-  /* Cashify semantic custom tokens */
-  --cashify-teal:       #42c8b7;
-  --cashify-teal-light: #e8f9f7;
-  --cashify-teal-dark:  #33a89a;
-  --cashify-green:      #42c86b;
-  --cashify-text:       #0f0f0f;
-  --cashify-text-muted: #707070;
-  --cashify-bg:         #ffffff;
-  --cashify-bg-light:   #f7f8f9;
-  --cashify-border:     #e8e8e8;
-  --cashify-shadow:     0 1px 4px rgba(0,0,0,0.08);
-  --cashify-shadow-md:  0 4px 16px rgba(0,0,0,0.1);
+  /* Semantic custom tokens */
+  --val-navy:          #0B1220;
+  --val-paper:         #F7F5F1;
+  --val-emerald:       #1F6F5C;
+  --val-emerald-dark:  #165042;
+  --val-brass:         #B8935F;
+  --val-charcoal:      #3E4147;
+  --val-border:        #E2DFD8;
+  --val-shadow:        0 4px 20px rgba(11, 18, 32, 0.05);
+  --val-shadow-hover:  0 8px 30px rgba(11, 18, 32, 0.08);
 }
 
 @layer base {
@@ -90,113 +88,119 @@
     @apply bg-background text-foreground;
     font-family: 'Inter', system-ui, sans-serif;
     font-size: 16px;
-    line-height: 1.5;
-    color: var(--cashify-text);
-    background: var(--cashify-bg);
+    line-height: 1.6;
+    color: var(--val-charcoal);
+    background: var(--val-paper);
     overflow-x: hidden;
   }
   h1,h2,h3,h4,h5,h6 {
-    font-family: 'Inter', system-ui, sans-serif;
-    font-weight: 700;
-    color: var(--cashify-text);
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    color: var(--val-navy);
+    letter-spacing: -0.02em;
   }
 }
 
-/* ─── Cashify Utility Classes ─── */
-.cashify-btn-primary {
+/* ─── Valuation Slip Utility Classes ─── */
+.val-btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background: var(--cashify-teal);
+  background: var(--val-emerald);
   color: #ffffff;
-  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
   font-size: 14px;
   padding: 10px 24px;
-  border-radius: 6px;
-  border: none;
+  border-radius: 4px;
+  border: 1px solid var(--val-emerald-dark);
   cursor: pointer;
   min-height: 44px;
-  transition: background 150ms, transform 150ms, box-shadow 150ms;
+  transition: all 200ms ease;
   outline: none;
+  box-shadow: 0 1px 2px rgba(11, 18, 32, 0.1);
 }
-.cashify-btn-primary:hover {
-  background: var(--cashify-teal-dark);
-  box-shadow: 0 4px 12px rgba(66, 200, 183, 0.3);
-}
-.cashify-btn-primary:focus-visible {
-  box-shadow: 0 0 0 3px rgba(66, 200, 183, 0.4);
+.val-btn-primary:hover {
+  background: var(--val-emerald-dark);
+  box-shadow: 0 4px 12px rgba(31, 111, 92, 0.2);
+  transform: translateY(-1px);
 }
 
-.cashify-btn-outline {
+.val-btn-outline {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
   background: transparent;
-  color: var(--cashify-teal);
-  font-weight: 600;
+  color: var(--val-navy);
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
   font-size: 14px;
   padding: 10px 24px;
-  border-radius: 6px;
-  border: 1.5px solid var(--cashify-teal);
+  border-radius: 4px;
+  border: 1px solid var(--val-border);
   cursor: pointer;
   min-height: 44px;
-  transition: all 150ms;
+  transition: all 200ms ease;
   outline: none;
 }
-.cashify-btn-outline:hover {
-  background: var(--cashify-teal-light);
-}
-.cashify-btn-outline:focus-visible {
-  box-shadow: 0 0 0 3px rgba(66, 200, 183, 0.4);
+.val-btn-outline:hover {
+  background: rgba(11, 18, 32, 0.03);
+  border-color: var(--val-navy);
 }
 
-.cashify-card {
+.val-card {
   background: #ffffff;
-  border: 1px solid var(--cashify-border);
-  border-radius: 10px;
-  box-shadow: var(--cashify-shadow);
-  transition: box-shadow 200ms, border-color 200ms, transform 200ms;
+  border: 1px solid var(--val-border);
+  border-radius: 4px;
+  box-shadow: var(--val-shadow);
+  transition: all 200ms ease;
 }
-.cashify-card:hover {
-  box-shadow: var(--cashify-shadow-md);
-  border-color: var(--cashify-teal);
-  transform: translateY(-2px);
+.val-card:hover {
+  box-shadow: var(--val-shadow-hover);
+  border-color: var(--val-navy);
 }
 
-.cashify-section-title {
-  font-size: 20px;
+/* Torn Edge Valuation Stub Effect */
+.valuation-stub {
+  position: relative;
+  background: #ffffff;
+  border: 1px solid var(--val-border);
+  border-left: 2px dashed var(--val-border);
+  border-radius: 0 4px 4px 0;
+  padding: 16px;
+}
+.valuation-stub::before,
+.valuation-stub::after {
+  content: '';
+  position: absolute;
+  left: -6px;
+  width: 10px;
+  height: 10px;
+  background-color: var(--val-paper);
+  border-radius: 50%;
+  border: 1px solid var(--val-border);
+}
+.valuation-stub::before {
+  top: -6px;
+  border-bottom-color: transparent;
+  border-left-color: transparent;
+  transform: rotate(45deg);
+}
+.valuation-stub::after {
+  bottom: -6px;
+  border-top-color: transparent;
+  border-left-color: transparent;
+  transform: rotate(-45deg);
+}
+
+/* Special pricing text */
+.val-price {
+  font-family: 'Space Mono', monospace;
+  color: var(--val-brass);
   font-weight: 700;
-  color: var(--cashify-text);
-  margin-bottom: 20px;
-}
-.cashify-section-subtitle {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--cashify-teal);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  margin-bottom: 6px;
-}
-.cashify-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: var(--cashify-teal-light);
-  color: var(--cashify-teal-dark);
-  font-size: 12px;
-  font-weight: 600;
-  padding: 4px 12px;
-  border-radius: 9999px;
-}
-.cashify-tag-discount {
-  background: #fff0f0;
-  color: #e53e3e;
-  font-size: 11px;
-  font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 4px;
+  letter-spacing: -0.05em;
 }
 
 /* ─── Responsive Overrides (Mobile) ─── */
