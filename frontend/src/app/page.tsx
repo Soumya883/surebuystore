@@ -280,7 +280,7 @@ export default function Home() {
       {/* ══════════════════════════════════════════════
           TOP SELLING PHONES — Price table (most Cashify-like!)
          ══════════════════════════════════════════════ */}
-      <section className="px-4 py-8 md:py-10 max-w-7xl mx-auto overflow-hidden">
+      <section className="px-4 py-8 md:py-10 max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-[18px] md:text-[20px] font-bold m-0 text-gray-900">Top Selling Phones</h2>
           <Link href="/sell" className="text-[13px] font-semibold text-[#42c8b7] no-underline flex items-center gap-1 hover:underline">
@@ -289,10 +289,10 @@ export default function Home() {
         </div>
 
         {/* Table wrapper with horizontal scroll for mobile */}
-        <div className="bg-white rounded-xl border border-gray-200 overflow-x-auto">
-          <div className="min-w-[500px]">
+        <div className="bg-white rounded-xl border border-gray-200 w-full overflow-x-auto -webkit-overflow-scrolling-touch">
+          <div className="min-w-[560px]">
             {/* Table header */}
-            <div className="grid grid-cols-[3fr_1fr_1fr_auto] gap-2 px-5 py-3 bg-teal-50/30 border-b border-gray-200 text-[11px] md:text-[12px] font-bold text-gray-500 uppercase tracking-wider">
+            <div className="grid grid-cols-[2fr_1fr_1fr_auto] gap-2 px-4 py-3 bg-teal-50/30 border-b border-gray-200 text-[11px] font-bold text-gray-500 uppercase tracking-wider">
               <span>Phone Model</span>
               <span>MRP</span>
               <span className="text-[#42c8b7]">SureBuy Price</span>
@@ -301,34 +301,34 @@ export default function Home() {
 
             {TOP_SELLING.map((phone, i) => (
               <div key={phone.model} 
-                className={`grid grid-cols-[3fr_1fr_1fr_auto] gap-2 px-5 py-3.5 items-center transition-colors hover:bg-teal-50/50 ${i < TOP_SELLING.length - 1 ? 'border-b border-gray-100' : ''} ${i % 2 === 0 ? 'bg-white' : 'bg-gray-50/30'}`}
+                className={`grid grid-cols-[2fr_1fr_1fr_auto] gap-2 px-4 py-3 items-center transition-colors hover:bg-teal-50/50 ${i < TOP_SELLING.length - 1 ? 'border-b border-gray-100' : ''} ${i % 2 === 0 ? 'bg-white' : 'bg-gray-50/30'}`}
               >
                 {/* Phone name + image */}
-                <div className="flex items-center gap-3">
-                  <div className="relative w-10 h-10 md:w-12 md:h-12 flex-shrink-0">
-                    <Image src={phone.img} alt={phone.model} fill className="object-contain" sizes="48px" />
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="relative w-9 h-9 flex-shrink-0">
+                    <Image src={phone.img} alt={phone.model} fill className="object-contain" sizes="36px" />
                   </div>
-                  <div className="flex flex-col">
-                    <span className="font-semibold text-gray-900 text-[13px] md:text-[14px] truncate pr-2">{phone.model}</span>
-                    <span className="text-[11px] text-gray-500">{phone.brand}</span>
+                  <div className="flex flex-col min-w-0">
+                    <span className="font-semibold text-gray-900 text-[12px] md:text-[14px] truncate">{phone.model}</span>
+                    <span className="text-[10px] text-gray-500">{phone.brand}</span>
                   </div>
                 </div>
                 
                 {/* MRP */}
-                <div className="font-medium text-[13px] md:text-[14px] text-gray-400 line-through">
+                <div className="font-medium text-[12px] text-gray-400 line-through whitespace-nowrap">
                   {phone.mrp}
                 </div>
                 
                 {/* Surebuy Price */}
-                <div className="font-bold text-[14px] md:text-[16px] text-[#42c8b7]">
+                <div className="font-bold text-[13px] md:text-[15px] text-[#42c8b7] whitespace-nowrap">
                   {phone.sell}
                 </div>
                 
                 {/* Action */}
-                <div className="flex justify-end">
+                <div className="flex justify-end pr-1">
                   <Link href="/sell">
-                    <button className="bg-[#42c8b7] text-white border-none rounded-md px-3 py-1.5 md:px-5 md:py-2 text-[12px] md:text-[13px] font-bold cursor-pointer hover:bg-[#33a89a] transition-colors whitespace-nowrap h-9">
-                      Get Price
+                    <button className="bg-[#42c8b7] text-white border-none rounded-md px-2.5 py-1.5 text-[11px] font-bold cursor-pointer hover:bg-[#33a89a] transition-colors whitespace-nowrap">
+                      Sell
                     </button>
                   </Link>
                 </div>
@@ -349,6 +349,7 @@ export default function Home() {
           </Link>
         </div>
       </section>
+
 
       {/* ══════════════════════════════════════════════
           HOW IT WORKS (New Section)

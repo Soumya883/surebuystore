@@ -38,13 +38,13 @@ export function Footer() {
           {/* Brand - takes up full width on mobile, 2 cols on lg */}
           <div className="col-span-2 flex flex-col gap-4">
             <Link href="/" className="flex items-center gap-2 no-underline">
-              <div className="relative w-[180px] h-[52px] lg:w-[220px] lg:h-[64px]">
+              <div className="relative w-[160px] h-[60px] lg:w-[200px] lg:h-[74px] bg-white rounded-lg p-1">
                 <Image 
                   src="/logo.png" 
                   alt="SureBuy Logo" 
                   fill 
-                  className="object-contain object-left"
-                  sizes="(max-width: 1024px) 180px, 220px"
+                  className="object-contain object-center"
+                  sizes="(max-width: 1024px) 160px, 200px"
                 />
               </div>
             </Link>
