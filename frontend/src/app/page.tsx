@@ -278,67 +278,94 @@ export default function Home() {
       </section>
 
       {/* ══════════════════════════════════════════════
-          TOP SELLING PHONES — Price table (most Cashify-like!)
+          TOP SELLING PHONES — Mobile Cards + Desktop Table
          ══════════════════════════════════════════════ */}
       <section className="px-4 py-8 md:py-10 max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-[18px] md:text-[20px] font-bold m-0 text-gray-900">Top Selling Phones</h2>
+          <div>
+            <h2 className="text-[18px] md:text-[22px] font-bold m-0 text-gray-900">Top Selling Phones</h2>
+          </div>
           <Link href="/sell" className="text-[13px] font-semibold text-[#42c8b7] no-underline flex items-center gap-1 hover:underline">
             View All <ChevronRight size={14} />
           </Link>
         </div>
 
-        {/* Table wrapper with horizontal scroll for mobile */}
-        <div className="bg-white rounded-xl border border-gray-200 w-full overflow-x-auto -webkit-overflow-scrolling-touch">
-          <div className="min-w-[560px]">
-            {/* Table header */}
-            <div className="grid grid-cols-[2fr_1fr_1fr_auto] gap-2 px-4 py-3 bg-teal-50/30 border-b border-gray-200 text-[11px] font-bold text-gray-500 uppercase tracking-wider">
-              <span>Phone Model</span>
-              <span>MRP</span>
-              <span className="text-[#42c8b7]">SureBuy Price</span>
-              <span></span>
-            </div>
-
-            {TOP_SELLING.map((phone, i) => (
-              <div key={phone.model} 
-                className={`grid grid-cols-[2fr_1fr_1fr_auto] gap-2 px-4 py-3 items-center transition-colors hover:bg-teal-50/50 ${i < TOP_SELLING.length - 1 ? 'border-b border-gray-100' : ''} ${i % 2 === 0 ? 'bg-white' : 'bg-gray-50/30'}`}
-              >
-                {/* Phone name + image */}
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className="relative w-9 h-9 flex-shrink-0">
-                    <Image src={phone.img} alt={phone.model} fill className="object-contain" sizes="36px" />
-                  </div>
-                  <div className="flex flex-col min-w-0">
-                    <span className="font-semibold text-gray-900 text-[12px] md:text-[14px] truncate">{phone.model}</span>
-                    <span className="text-[10px] text-gray-500">{phone.brand}</span>
-                  </div>
+        {/* Mobile View: Clean Touch Slider / Card List */}
+        <div className="flex md:hidden overflow-x-auto gap-3 pb-3 snap-x snap-mandatory -mx-4 px-4 scrollbar-none">
+          {TOP_SELLING.map((phone) => (
+            <div 
+              key={phone.model} 
+              className="flex-shrink-0 w-[240px] bg-white rounded-xl border border-gray-200 p-4 snap-start shadow-sm flex flex-col justify-between"
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <div className="relative w-12 h-12 flex-shrink-0 bg-gray-50 rounded-lg p-1">
+                  <Image src={phone.img} alt={phone.model} fill className="object-contain" sizes="48px" />
                 </div>
-                
-                {/* MRP */}
-                <div className="font-medium text-[12px] text-gray-400 line-through whitespace-nowrap">
-                  {phone.mrp}
-                </div>
-                
-                {/* Surebuy Price */}
-                <div className="font-bold text-[13px] md:text-[15px] text-[#42c8b7] whitespace-nowrap">
-                  {phone.sell}
-                </div>
-                
-                {/* Action */}
-                <div className="flex justify-end pr-1">
-                  <Link href="/sell">
-                    <button className="bg-[#42c8b7] text-white border-none rounded-md px-2.5 py-1.5 text-[11px] font-bold cursor-pointer hover:bg-[#33a89a] transition-colors whitespace-nowrap">
-                      Sell
-                    </button>
-                  </Link>
+                <div className="flex flex-col min-w-0">
+                  <span className="font-bold text-gray-900 text-[13px] line-clamp-1">{phone.model}</span>
+                  <span className="text-[11px] text-gray-500">{phone.brand}</span>
                 </div>
               </div>
-            ))}
+
+              <div className="pt-3 border-t border-gray-100 flex items-center justify-between">
+                <div>
+                  <div className="text-[10px] text-gray-400 line-through leading-none">{phone.mrp}</div>
+                  <div className="text-[15px] font-black text-[#42c8b7] leading-tight">{phone.sell}</div>
+                </div>
+                <Link href="/sell">
+                  <button className="bg-[#42c8b7] hover:bg-[#33a89a] text-white border-none rounded-lg px-4 py-2 text-[12px] font-bold cursor-pointer transition-colors whitespace-nowrap">
+                    Get Price
+                  </button>
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop View: Full Table */}
+        <div className="hidden md:block bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+          <div className="grid grid-cols-[3fr_1fr_1fr_auto] gap-2 px-6 py-3.5 bg-teal-50/30 border-b border-gray-200 text-[12px] font-bold text-gray-500 uppercase tracking-wider">
+            <span>Phone Model</span>
+            <span>MRP</span>
+            <span className="text-[#42c8b7]">SureBuy Price</span>
+            <span></span>
           </div>
+
+          {TOP_SELLING.map((phone, i) => (
+            <div key={phone.model} 
+              className={`grid grid-cols-[3fr_1fr_1fr_auto] gap-2 px-6 py-4 items-center transition-colors hover:bg-teal-50/30 ${i < TOP_SELLING.length - 1 ? 'border-b border-gray-100' : ''}`}
+            >
+              <div className="flex items-center gap-3">
+                <div className="relative w-11 h-11 flex-shrink-0">
+                  <Image src={phone.img} alt={phone.model} fill className="object-contain" sizes="44px" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="font-semibold text-gray-900 text-[14px]">{phone.model}</span>
+                  <span className="text-[11px] text-gray-500">{phone.brand}</span>
+                </div>
+              </div>
+              
+              <div className="font-medium text-[14px] text-gray-400 line-through">
+                {phone.mrp}
+              </div>
+              
+              <div className="font-bold text-[16px] text-[#42c8b7]">
+                {phone.sell}
+              </div>
+              
+              <div className="flex justify-end">
+                <Link href="/sell">
+                  <button className="bg-[#42c8b7] text-white border-none rounded-lg px-5 py-2 text-[13px] font-bold cursor-pointer hover:bg-[#33a89a] transition-colors whitespace-nowrap">
+                    Get Price
+                  </button>
+                </Link>
+              </div>
+            </div>
+          ))}
         </div>
 
         {/* View more */}
-        <div style={{ textAlign: "center", marginTop: 16 }}>
+        <div style={{ textAlign: "center", marginTop: 20 }}>
           <Link href="/sell">
             <button style={{ background: "transparent", color: C.teal, border: `1.5px solid ${C.teal}`, padding: "10px 32px", borderRadius: 8, fontSize: 14, fontWeight: 700, cursor: "pointer", transition: "all 150ms" }}
               onMouseOver={e => { e.currentTarget.style.background = C.tealLight; }}

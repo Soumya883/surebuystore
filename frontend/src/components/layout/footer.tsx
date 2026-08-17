@@ -37,16 +37,19 @@ export function Footer() {
           
           {/* Brand - takes up full width on mobile, 2 cols on lg */}
           <div className="col-span-2 flex flex-col gap-4">
-            <Link href="/" className="flex items-center gap-2 no-underline">
-              <div className="relative w-[160px] h-[60px] lg:w-[200px] lg:h-[74px] bg-white rounded-lg p-1">
+            <Link href="/" className="flex items-center gap-3 no-underline">
+              <div className="relative w-10 h-10 lg:w-12 lg:h-12 rounded-full overflow-hidden flex-shrink-0 bg-white border border-gray-700">
                 <Image 
                   src="/logo.png" 
                   alt="SureBuy Logo" 
                   fill 
-                  className="object-contain object-center"
-                  sizes="(max-width: 1024px) 160px, 200px"
+                  className="object-cover"
+                  sizes="48px"
                 />
               </div>
+              <span className="font-black text-[20px] text-white tracking-tight">
+                SureBuy<span className="text-[#42c8b7]">Store</span>
+              </span>
             </Link>
             <div className="flex flex-wrap gap-2 mt-2">
               {["Facebook", "Twitter", "Instagram", "LinkedIn"].map(s => (

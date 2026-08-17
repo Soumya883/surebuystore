@@ -68,17 +68,20 @@ export function Header() {
         
         {/* Mobile top row: Logo + Hamburger + Cart (only on mobile) */}
         <div className="flex items-center justify-between w-full lg:w-auto flex-shrink-0">
-          <Link href="/" className="no-underline">
-            <div className="relative w-[150px] h-[40px] lg:w-[180px] lg:h-[50px]">
+          <Link href="/" className="no-underline flex items-center gap-2.5">
+            <div className="relative w-9 h-9 lg:w-11 lg:h-11 rounded-full overflow-hidden flex-shrink-0 bg-white border border-gray-200 shadow-sm">
               <Image 
                 src="/logo.png" 
                 alt="SureBuy Logo" 
                 fill 
-                className="object-contain object-left"
+                className="object-cover"
                 priority
-                sizes="(max-width: 1024px) 150px, 180px"
+                sizes="44px"
               />
             </div>
+            <span className="font-black text-[18px] lg:text-[22px] tracking-tight text-gray-900 leading-none">
+              SureBuy<span className="text-[#42c8b7]">Store</span>
+            </span>
           </Link>
 
           <div className="flex items-center gap-2 lg:hidden">
