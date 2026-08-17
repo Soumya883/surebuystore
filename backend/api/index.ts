@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from '../src/app.module';
 import { ExpressAdapter } from '@nestjs/platform-express';
-import * as express from 'express';
+import express from 'express';
 import { ValidationPipe } from '@nestjs/common';
 
 const expressApp = express();
@@ -13,7 +13,7 @@ async function bootstrapServer() {
     const app = await NestFactory.create(AppModule, new ExpressAdapter(expressApp));
     
     app.enableCors({
-      origin: (origin, callback) => {
+      origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
         callback(null, true);
       },
       methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
