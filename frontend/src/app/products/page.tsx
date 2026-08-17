@@ -116,6 +116,13 @@ export default function ProductsPage() {
 
   return (
     <div style={{ background: "#f7f8f9", minHeight: "100vh", fontFamily: "'Inter', sans-serif" }}>
+      <style>{`
+        @media (max-width: 768px) {
+          .products-layout { flex-direction: column !important; }
+          .desktop-sidebar { display: none !important; }
+          .products-grid { grid-template-columns: 1fr 1fr !important; gap: 12px !important; }
+        }
+      `}</style>
       {/* Toast notification */}
       <div id="cart-toast" style={{ position: "fixed", bottom: 24, right: 24, background: "#0f0f0f", color: "#fff", padding: "12px 20px", borderRadius: 12, fontSize: 14, fontWeight: 600, zIndex: 9999, opacity: 0, transition: "opacity 300ms", boxShadow: "0 8px 24px rgba(0,0,0,0.2)", display: "flex", alignItems: "center", gap: 10 }}>
         <ShoppingCart size={16} style={{ color: "#42c8b7" }} /> Added to cart!
