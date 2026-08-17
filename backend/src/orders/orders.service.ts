@@ -53,6 +53,7 @@ export class OrdersService {
     }
 
     const isCOD = dto.paymentMethod === PaymentMethod.COD;
+    const advanceAmount = isCOD ? Math.round(totalAmount * 0.1) : 0;
 
     const order = this.ordersRepository.create({
       user,
@@ -60,7 +61,7 @@ export class OrdersService {
       status: isCOD ? OrderStatus.PENDING_COD : OrderStatus.PAYMENT_PENDING,
       paymentMethod: dto.paymentMethod,
       totalAmount,
-      amountPaid: 0, // Always 0 for COD until delivery
+      amountPaid: advanceAmount, // 10% advance deposit for COD, rest on delivery
       shippingAddress: dto.shippingAddress,
       deliveryNotes: dto.deliveryNotes,
     });

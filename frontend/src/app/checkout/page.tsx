@@ -29,6 +29,8 @@ export default function CheckoutPage() {
 
   const total = items.reduce((s, i) => s + i.price * i.quantity, 0);
   const savings = items.reduce((s, i) => s + ((i.mrp || i.price) - i.price) * i.quantity, 0);
+  const advancePay = Math.round(total * 0.1);
+  const codRemaining = total - advancePay;
 
   const handleAddressSubmit = (e: React.FormEvent) => { e.preventDefault(); setStep(2); };
 
@@ -44,6 +46,8 @@ export default function CheckoutPage() {
           items: items.map(i => ({ productId: i.id, quantity: i.quantity })),
           paymentMethod,
           shippingAddress: address,
+          advanceAmount: paymentMethod === "COD" ? advancePay : total,
+          remainingAmount: paymentMethod === "COD" ? codRemaining : 0,
         }),
       });
       const data = await res.json();
@@ -68,7 +72,7 @@ export default function CheckoutPage() {
     <div style={{ minHeight: "100vh", background: "#f5f5f5", fontFamily: "'Inter', sans-serif" }}>
       {/* Header */}
       <div style={{ background: "#fff", borderBottom: "1px solid #eee", padding: "14px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <Link href="/"><div style={{ position: "relative", width: 130, height: 38 }}><Image src="https://cdn2.clevup.in/111129/1644850958193_114304_logo.jpg?height=200&format=webp" alt="SureBuy" fill style={{ objectFit: "contain", objectPosition: "left" }} /></div></Link>
+        <Link href="/"><div style={{ position: "relative", width: 130, height: 38 }}><Image src="/logo.png" alt="SureBuy" fill style={{ objectFit: "contain", objectPosition: "left" }} /></div></Link>
         <div style={{ display: "flex", gap: 8 }}>
           {[{n:1,l:"Address"},{n:2,l:"Payment"},{n:3,l:"Confirmation"}].map(({n,l})=>(
             <div key={n} style={{ display:"flex", alignItems:"center", gap:6 }}>
@@ -130,11 +134,11 @@ export default function CheckoutPage() {
                 <label style={{ display: "flex", gap: 14, padding: "18px 20px", border: `2px solid ${paymentMethod === "COD" ? "#42c8b7" : "#eee"}`, borderRadius: 12, cursor: "pointer", transition: "border-color 200ms" }}>
                   <input type="radio" name="payment" value="COD" checked={paymentMethod === "COD"} onChange={() => setPaymentMethod("COD")} style={{ marginTop: 3 }} />
                   <div>
-                    <div style={{ fontWeight: 700, fontSize: 15, color: "#333", marginBottom: 4 }}>💰 Cash on Delivery (COD)</div>
-                    <div style={{ fontSize: 13, color: "#555" }}>Pay <strong style={{ color:"#2e7d32" }}>₹0 now</strong>. Pay only when your order is delivered at your door.</div>
-                    <div style={{ marginTop: 8, display:"flex", gap:8 }}>
-                      {["✅ No advance payment","✅ 100% safe","✅ Easy returns"].map(t => (
-                        <span key={t} style={{ fontSize:11, background:"#e8f5e9", color:"#2e7d32", padding:"2px 8px", borderRadius:4 }}>{t}</span>
+                    <div style={{ fontWeight: 700, fontSize: 15, color: "#333", marginBottom: 4 }}>💵 Partial COD (10% Pay Now + 90% on Delivery)</div>
+                    <div style={{ fontSize: 13, color: "#555" }}>Pay <strong style={{ color:"#42c8b7" }}>10% (₹{advancePay.toLocaleString()})</strong> now to confirm order. Pay remaining <strong style={{ color:"#2e7d32" }}>90% (₹{codRemaining.toLocaleString()})</strong> on delivery.</div>
+                    <div style={{ marginTop: 8, display:"flex", flexWrap:"wrap", gap:8 }}>
+                      {[`⚡ ₹${advancePay.toLocaleString()} Pay Now`,`🚚 ₹${codRemaining.toLocaleString()} On Delivery`,`🔒 100% Safe`].map(t => (
+                        <span key={t} style={{ fontSize:11, background:"#e8f9f7", color:"#2ea898", padding:"3px 8px", borderRadius:4, fontWeight:600 }}>{t}</span>
                       ))}
                     </div>
                   </div>
@@ -144,11 +148,11 @@ export default function CheckoutPage() {
                 <label style={{ display: "flex", gap: 14, padding: "18px 20px", border: `2px solid ${paymentMethod === "RAZORPAY" ? "#42c8b7" : "#eee"}`, borderRadius: 12, cursor: "pointer", transition: "border-color 200ms" }}>
                   <input type="radio" name="payment" value="RAZORPAY" checked={paymentMethod === "RAZORPAY"} onChange={() => setPaymentMethod("RAZORPAY")} style={{ marginTop: 3 }} />
                   <div>
-                    <div style={{ fontWeight: 700, fontSize: 15, color: "#333", marginBottom: 4 }}>⚡ Online Payment</div>
-                    <div style={{ fontSize: 13, color: "#555" }}>UPI, Debit/Credit Cards, Net Banking via Razorpay. Instant confirmation.</div>
+                    <div style={{ fontWeight: 700, fontSize: 15, color: "#333", marginBottom: 4 }}>⚡ Full Prepaid Online Payment</div>
+                    <div style={{ fontSize: 13, color: "#555" }}>UPI, Debit/Credit Cards, Net Banking via Razorpay. Pay 100% (₹{total.toLocaleString()}) now.</div>
                     <div style={{ marginTop: 8, display:"flex", gap:8 }}>
-                      {["🔒 SSL Secured","⚡ Instant","🎁 Extra discount"].map(t => (
-                        <span key={t} style={{ fontSize:11, background:"#e8f0fe", color:"#3730a3", padding:"2px 8px", borderRadius:4 }}>{t}</span>
+                      {["🔒 SSL Secured","⚡ Instant Confirmation","🎁 Priority Dispatch"].map(t => (
+                        <span key={t} style={{ fontSize:11, background:"#e8f0fe", color:"#3730a3", padding:"3px 8px", borderRadius:4, fontWeight:600 }}>{t}</span>
                       ))}
                     </div>
                   </div>
@@ -165,7 +169,7 @@ export default function CheckoutPage() {
               <div style={{ display:"flex", gap:12 }}>
                 <button onClick={() => setStep(1)} style={{ flex:1, padding:"13px", background:"#f0f0f0", border:"none", borderRadius:10, color:"#333", fontSize:14, fontWeight:600, cursor:"pointer" }}>← Back</button>
                 <button onClick={placeOrder} disabled={loading} style={{ flex:2, padding:"13px", background:"linear-gradient(135deg, #ff6b35, #ee5a24)", border:"none", borderRadius:10, color:"#fff", fontSize:15, fontWeight:700, cursor:"pointer" }}>
-                  {loading ? "Placing Order..." : paymentMethod === "COD" ? "Place Order (Pay on Delivery) →" : "Proceed to Pay →"}
+                  {loading ? "Processing..." : paymentMethod === "COD" ? `Pay 10% (₹${advancePay.toLocaleString()}) & Confirm COD →` : "Proceed to Pay →"}
                 </button>
               </div>
             </div>
@@ -178,13 +182,20 @@ export default function CheckoutPage() {
               <h2 style={{ fontSize:24, fontWeight:700, color:"#222", marginBottom:8 }}>Order Placed Successfully!</h2>
               <p style={{ color:"#666", marginBottom:4, fontSize:15 }}>Order ID: <strong style={{ color:"#42c8b7" }}>#{orderId.slice(-8).toUpperCase()}</strong></p>
               {paymentMethod === "COD" && (
-                <div style={{ background:"#fff8e1", border:"1px solid #ffc107", borderRadius:10, padding:"16px", margin:"20px 0", fontSize:14 }}>
-                  <div style={{ fontWeight:700, color:"#333", marginBottom:4 }}>💰 Cash on Delivery Confirmed</div>
-                  <div style={{ color:"#666" }}>You pay <strong>₹{total.toLocaleString()}</strong> only when the product is delivered. No advance payment needed!</div>
+                <div style={{ background:"#e8f9f7", border:"1px solid #42c8b7", borderRadius:10, padding:"18px", margin:"20px 0", fontSize:14, textAlign:"left" }}>
+                  <div style={{ fontWeight:700, color:"#165042", marginBottom:6, fontSize:15 }}>💵 COD Order Confirmed Breakdown</div>
+                  <div style={{ display:"flex", justifyBetween:"space-between", marginBottom:4 }}>
+                    <span>10% Advance Deposit (Paid Now):</span>
+                    <strong style={{ color:"#165042" }}>₹{advancePay.toLocaleString()}</strong>
+                  </div>
+                  <div style={{ display:"flex", justifyBetween:"space-between", marginTop:4, borderTop:"1px stroke #c8f2ed", paddingTop:6 }}>
+                    <span>90% Balance Due on Delivery:</span>
+                    <strong style={{ color:"#2e7d32", fontSize:16 }}>₹{codRemaining.toLocaleString()}</strong>
+                  </div>
                 </div>
               )}
               <p style={{ color:"#888", fontSize:13, marginBottom:24 }}>We&apos;ll send order updates to {user?.email}</p>
-              <div style={{ display:"flex", gap:12, justifyContent:"center" }}>
+              <div style={{ display:"flex", gap:12, justifyCenter:"center" }}>
                 <Link href="/" style={{ padding:"12px 24px", background:"#42c8b7", color:"#fff", borderRadius:8, textDecoration:"none", fontWeight:600 }}>Continue Shopping</Link>
                 <Link href="/account/orders" style={{ padding:"12px 24px", background:"#f0f0f0", color:"#333", borderRadius:8, textDecoration:"none", fontWeight:600 }}>View My Orders</Link>
               </div>
@@ -210,12 +221,19 @@ export default function CheckoutPage() {
                 </div>
               ))}
               <div style={{ borderTop:"1px solid #f0f0f0", paddingTop:14, display:"flex", justifyContent:"space-between", fontWeight:700, fontSize:16 }}>
-                <span>Total</span>
+                <span>Total Amount</span>
                 <span>₹{total.toLocaleString()}</span>
               </div>
-              {paymentMethod === "COD" && step === 2 && (
-                <div style={{ marginTop:12, background:"#e8f5e9", borderRadius:8, padding:"10px 12px", fontSize:13, color:"#2e7d32", fontWeight:600 }}>
-                  Pay on delivery: ₹{total.toLocaleString()}
+              {paymentMethod === "COD" && (
+                <div style={{ marginTop:14, background:"#f8f9fa", borderRadius:8, padding:"12px", border:"1px border #e2e8f0" }}>
+                  <div style={{ display:"flex", justifyBetween:"space-between", fontSize:13, marginBottom:4, color:"#42c8b7", fontWeight:700 }}>
+                    <span>10% Pay Now (Deposit):</span>
+                    <span>₹{advancePay.toLocaleString()}</span>
+                  </div>
+                  <div style={{ display:"flex", justifyBetween:"space-between", fontSize:13, color:"#2e7d32", fontWeight:700 }}>
+                    <span>90% Pay on Delivery:</span>
+                    <span>₹{codRemaining.toLocaleString()}</span>
+                  </div>
                 </div>
               )}
             </div>

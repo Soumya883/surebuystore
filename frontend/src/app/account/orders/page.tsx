@@ -203,10 +203,12 @@ export default function MyOrdersPage() {
                     </div>
                     <div>
                       <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-0.5">Payment Method</p>
-                      <p className="text-sm font-medium text-foreground flex items-center gap-2">
-                        {order.paymentMethod === "COD" ? "Cash on Delivery" : "Online Payment"}
-                        {order.paymentMethod === "COD" && order.status !== "DELIVERED" && (
-                          <span className="text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded-sm font-bold uppercase tracking-wider">Unpaid</span>
+                      <p className="text-sm font-medium text-foreground flex flex-wrap items-center gap-2">
+                        {order.paymentMethod === "COD" ? "Partial COD (10% Paid)" : "Online Payment"}
+                        {order.paymentMethod === "COD" && (
+                          <span className="text-[10px] bg-teal-100 text-teal-800 px-1.5 py-0.5 rounded-sm font-bold uppercase tracking-wider">
+                            ₹{Math.round(Number(order.totalAmount) * 0.1).toLocaleString()} Paid (10%)
+                          </span>
                         )}
                       </p>
                     </div>
@@ -214,8 +216,12 @@ export default function MyOrdersPage() {
                   
                   <div className="flex items-center justify-between w-full sm:w-auto gap-4 sm:gap-6 pt-4 sm:pt-0 border-t sm:border-0 border-border/40">
                     <div className="flex flex-col items-start sm:items-end">
-                      <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Order Total</span>
-                      <span className="font-bold text-lg sm:text-xl text-primary">₹{Number(order.totalAmount).toLocaleString()}</span>
+                      <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                        {order.paymentMethod === "COD" ? "Due on Delivery (90%)" : "Order Total"}
+                      </span>
+                      <span className="font-bold text-lg sm:text-xl text-primary">
+                        ₹{order.paymentMethod === "COD" ? Math.round(Number(order.totalAmount) * 0.9).toLocaleString() : Number(order.totalAmount).toLocaleString()}
+                      </span>
                     </div>
                     
                     {cancellable ? (

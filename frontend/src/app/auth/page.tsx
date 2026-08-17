@@ -32,23 +32,28 @@ export default function AuthPage() {
     e.preventDefault();
     setLoading(true);
     setError("");
+    const cleanEmail = loginEmail.trim().toLowerCase();
+    const cleanPassword = loginPassword.trim();
     try {
       const res = await fetch(`${API_BASE}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: loginEmail, password: loginPassword }),
+        body: JSON.stringify({ email: cleanEmail, password: cleanPassword }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Login failed");
+      if (!res.ok) throw new Error(data.message || "Invalid email or password");
+      
       localStorage.setItem("access_token", data.access_token);
       localStorage.setItem("user", JSON.stringify(data.user));
-      if (data.user.role === "ADMIN") {
+      window.dispatchEvent(new Event("storage"));
+      
+      if (data.user?.role === "ADMIN") {
         router.push("/admin");
       } else {
         router.push("/");
       }
     } catch (err: any) {
-      setError(err.message);
+      setError(err.message || "Failed to log in. Please check your credentials.");
     } finally {
       setLoading(false);
     }
@@ -58,19 +63,25 @@ export default function AuthPage() {
     e.preventDefault();
     setLoading(true);
     setError("");
+    const cleanEmail = regEmail.trim().toLowerCase();
+    const cleanName = regName.trim();
+    const cleanPassword = regPassword.trim();
     try {
       const res = await fetch(`${API_BASE}/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: regName, email: regEmail, password: regPassword }),
+        body: JSON.stringify({ name: cleanName, email: cleanEmail, password: cleanPassword }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Registration failed");
+      
       localStorage.setItem("access_token", data.access_token);
       localStorage.setItem("user", JSON.stringify(data.user));
+      window.dispatchEvent(new Event("storage"));
+      
       router.push("/");
     } catch (err: any) {
-      setError(err.message);
+      setError(err.message || "Failed to register. Please try again.");
     } finally {
       setLoading(false);
     }

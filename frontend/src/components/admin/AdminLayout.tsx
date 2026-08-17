@@ -7,6 +7,9 @@ import {
   LogOut, Menu, X, ChevronRight
 } from "lucide-react";
 
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+
 const NAV_ITEMS = [
   { label: "Dashboard",     href: "/admin",               icon: LayoutDashboard },
   { label: "Products",      href: "/admin/products",      icon: Package },
@@ -17,7 +20,24 @@ const NAV_ITEMS = [
 ];
 
 export function AdminSidebar({ active }: { active: string }) {
+  const router = useRouter();
   const [collapsed, setCollapsed] = useState(false);
+
+  useEffect(() => {
+    const userStr = localStorage.getItem("user");
+    if (!userStr) {
+      router.push("/auth");
+      return;
+    }
+    try {
+      const user = JSON.parse(userStr);
+      if (user.role !== "ADMIN") {
+        router.push("/");
+      }
+    } catch {
+      router.push("/auth");
+    }
+  }, [router]);
 
   return (
     <aside className={`admin-sidebar ${collapsed ? "" : "open"}`} style={{
