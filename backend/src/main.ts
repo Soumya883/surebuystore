@@ -8,6 +8,8 @@ import express from 'express';
 import 'pg';
 
 const server = express();
+server.use(express.json({ limit: '50mb' }));
+server.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 export const createNestServer = async (expressInstance: any) => {
   const app = await NestFactory.create(AppModule, new ExpressAdapter(expressInstance));
