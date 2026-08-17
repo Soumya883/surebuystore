@@ -131,7 +131,7 @@ export default function ProductsPage() {
       </div>
 
       {/* Mobile filter bar */}
-      <div style={{ background: "#fff", borderBottom: "1px solid #eee", padding: "12px 16px", display: "flex", gap: 10, overflowX: "auto" }}>
+      <div className="md:hidden flex gap-[10px] overflow-x-auto p-[12px_16px] bg-[#fff] border-b border-[#eee]">
         <button onClick={() => setSidebarOpen(!sidebarOpen)}
           style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 16px", background: sidebarOpen ? "#42c8b7" : "#f5f5f5", color: sidebarOpen ? "#fff" : "#333", border: "1px solid #e0e0e0", borderRadius: 20, fontSize: 13, fontWeight: 600, cursor: "pointer", whiteSpace: "nowrap" }}>
           <SlidersHorizontal size={14} /> Filters {(brands.length + conditions.length) > 0 && `(${brands.length + conditions.length})`}
@@ -151,9 +151,9 @@ export default function ProductsPage() {
         ))}
       </div>
 
-      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "24px 16px", display: "flex", gap: 24, alignItems: "flex-start" }}>
+      <div className="max-w-[1280px] mx-auto p-[24px_16px] flex flex-col md:flex-row gap-[24px] items-start w-full">
         {/* Desktop Sidebar */}
-        <aside style={{ width: 260, flexShrink: 0, display: "block" }} className="products-sidebar">
+        <aside className="hidden md:block w-[260px] shrink-0 products-sidebar">
           <Sidebar />
         </aside>
 
@@ -193,7 +193,7 @@ export default function ProductsPage() {
               </button>
             </div>
           ) : (
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))", gap: 20 }}>
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-[20px]">
               {filteredProducts.map(p => {
                 const condStyle = CONDITION_COLORS[p.condition] || { bg: "#f3f4f6", color: "#6b7280" };
                 const isWishlisted = wishlist.includes(p.id);
