@@ -30,7 +30,8 @@ export default function MyOrdersPage() {
     const token = localStorage.getItem("access_token");
     if (!token) { router.push("/auth"); return; }
 
-    fetch("http://localhost:3001/orders", {
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+    fetch(`${API_URL}/orders`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then(r => r.json())
@@ -40,7 +41,8 @@ export default function MyOrdersPage() {
 
   const cancelOrder = async (id: string) => {
     const token = localStorage.getItem("access_token");
-    const res = await fetch(`http://localhost:3001/orders/${id}/cancel`, {
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+    const res = await fetch(`${API_URL}/orders/${id}/cancel`, {
       method: "PATCH",
       headers: { Authorization: `Bearer ${token}` },
     });

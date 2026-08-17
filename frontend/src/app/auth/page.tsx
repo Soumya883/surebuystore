@@ -26,7 +26,7 @@ export default function AuthPage() {
   const [regEmail, setRegEmail] = useState("");
   const [regPassword, setRegPassword] = useState("");
 
-  const API_BASE = "http://localhost:3001";
+  const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();

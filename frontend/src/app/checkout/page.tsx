@@ -36,7 +36,8 @@ export default function CheckoutPage() {
     setLoading(true); setError("");
     try {
       const token = localStorage.getItem("access_token");
-      const res = await fetch("http://localhost:3001/orders", {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+      const res = await fetch(`${API_URL}/orders`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify({
